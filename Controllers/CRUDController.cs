@@ -54,7 +54,7 @@ namespace examplemvc.Controllers
                 return NotFound("Post not found");
             }
 
-            return Ok(post);
+            return View(post);
         }
 
         [HttpPost("/Update/{id}")]
@@ -71,7 +71,7 @@ namespace examplemvc.Controllers
 
             _dbContext.SaveChanges();
 
-            return Ok(new { message = "Post updated successfully", post });
+            return View(new { message = "Post updated successfully", post });
         }
 
         [HttpPost("/Delete/{id}")]
@@ -86,7 +86,7 @@ namespace examplemvc.Controllers
             _dbContext.Posts.Remove(post);
             _dbContext.SaveChanges();
 
-            return Ok("Post deleted successfully");
+            return View("Delete", post);
         }
     }
 }
