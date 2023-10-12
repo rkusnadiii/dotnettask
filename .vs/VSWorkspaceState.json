@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\bin",
+    "\\bin\\Debug",
+    "\\bin\\Debug\\net6.0",
+    "\\Controllers",
+    "\\Models",
+    "\\Views",
+    "\\Views\\CRUD",
+    "\\Views\\Home"
+  ],
+  "SelectedNode": "\\Controllers\\CRUDController.cs",
+  "PreviewInSolutionExplorer": false
+}
