@@ -28,7 +28,7 @@
     <hr />
     <div class="row">
         <div class="col-md-6 offset-md-3">
-            <form asp-action="UpdatePost" asp-route-id="@Model.Id" method="post">
+            <form asp-action="UpdatePost" asp-controller="Post" asp-route-id="@Model.Id" method="post">
                 <div class="form-group">
                     <label for="title">Title:</label>
                     <input type="text" id="title" name="title" value="@Model.Title" class="form-control" />

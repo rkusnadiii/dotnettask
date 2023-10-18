@@ -1,14 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Controllers",
-    "\\Data",
+    "\\Filters",
     "\\Models",
     "\\Models\\Request",
+    "\\Properties",
+    "\\Repositories",
     "\\Views",
     "\\Views\\CRUD",
-    "\\Views\\Home"
+    "\\Views\\Home",
+    "\\Views\\Shared"
   ],
-  "SelectedNode": "\\Views\\CRUD\\Read.cshtml",
+  "SelectedNode": "\\Controllers\\CRUDController.cs",
   "PreviewInSolutionExplorer": false
 }

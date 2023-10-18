@@ -3,18 +3,22 @@ using examplemvc.Models.Request;
 using Microsoft.EntityFrameworkCore;
 
 
-public class YourDbContext : DbContext
+public class ApplicationDbContext : DbContext
 {
-    public YourDbContext(DbContextOptions<YourDbContext> options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
 
     public DbSet<Post> Posts { get; set; }
     public DbSet<User> Users { get; set; }  
-
+    public DbSet<Tag> Tags { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<PostTag>().HasKey(k => new {
+            k.IdPost,
+            k.IdTags
+        });
     }
 }
