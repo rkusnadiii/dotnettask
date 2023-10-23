@@ -56,11 +56,11 @@ namespace examplemvc.Controllers
         TempData.Add("msg", "Berhasil add data");
 
         // return Ok(new {body = request});
-        return RedirectToAction("ReadPost");
+        return RedirectToAction("HomePost");
         }
 
         [HttpGet("/Home/Read")]
-        public IActionResult ReadPost()
+        public IActionResult HomePost()
         {
             var posts = _dbContext.Post.ToList();
             return View("/Views/CRUD/AllPost.cshtml", posts);

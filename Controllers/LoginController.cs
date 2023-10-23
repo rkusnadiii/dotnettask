@@ -28,7 +28,7 @@ public class LoginController : Controller
             {
                 DisplaySuccessMessage("Login successful!");
                 HttpContext.Session.SetString("user", "admin");
-                return RedirectToAction("ReadPost", "Post");
+                return RedirectToAction("HomePost", "Post");
             }
             else
             {
