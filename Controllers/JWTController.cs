@@ -18,7 +18,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginModel loginModel)
+    public IActionResult Login([FromBody] Login loginModel)
     {
         var token = GenerateJwtToken();
         return Ok(new { Token = token }); 

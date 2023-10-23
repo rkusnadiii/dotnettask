@@ -9,15 +9,16 @@ using System;
 using System.Linq;
 using examplemvc.Filters;
 
+
 namespace examplemvc.Controllers
 {
-    // [TypeFilter(typeof(CustomAuthorizeFilter))]
+    [TypeFilter(typeof(CustomAuthorizeFilter))]
     public class PostController : Controller
     {
-        private readonly ILogger<PostController> _logger;
+        private readonly HomeController _logger;
         private readonly ApplicationDbContext _dbContext;
 
-        public PostController(ILogger<PostController> logger, ApplicationDbContext dbContext)
+        public PostController(HomeController  logger, ApplicationDbContext dbContext)
         {
             _logger = logger;
             _dbContext = dbContext;
@@ -32,15 +33,23 @@ namespace examplemvc.Controllers
         [HttpPost("/Home/Create")]
         public IActionResult ProcessInsert([FromForm] InsertPostRequest body)
         {
-            try
+           try
             {
-                var res = ModelState
-                .Select(s => s.Value.Errors)
-                .Where(w => w.Count > 0)
-                .ToList();
-                if (ModelState.IsValid == false || body == null)
+                if (ModelState != null) 
                 {
-                    return BadRequest("Invalid request body");
+                    var res = ModelState
+                        .Select(s => s.Value.Errors)
+                        .Where(w => w.Count > 0)
+                        .ToList();
+                    
+                    if (ModelState.IsValid == false || body == null)
+                    {
+                        return BadRequest("Invalid request body");
+                    }
+                }
+                else
+                {
+                    return BadRequest("Invalid ModelState");
                 }
 
                 var post = new Post()

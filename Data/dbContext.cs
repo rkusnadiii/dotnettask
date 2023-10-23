@@ -11,14 +11,8 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<Post> Posts { get; set; }
-    public DbSet<User> Users { get; set; }  
     public DbSet<Tag> Tags { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<PostTag>().HasKey(k => new {
-            k.IdPost,
-            k.IdTags
-        });
-    }
+    public DbSet<PostTag> PostTags { get; set; }
+    public DbSet<User> Users { get; internal set; }
 }
+

@@ -1,74 +1,67 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 
 namespace examplemvc.Models;
 
-    public class Post
-    {
-        [Key]
-        [Column("id")]
-        public int Id { get; set; }
+public class Post
+{
+    [Key]
+    public int Id { get; set; }
 
-        [ForeignKey("Pengguna")]
-        [Column("user_id")]
-        public int UserId { get; set; }
+    [Required]
+    public string Title { get; set; }
 
-        public string Title { get; set; } = string.Empty;
-        public string Body { get; set; } = string.Empty;
+    [Required]
+    public string Body { get; set; }
 
-        [Column("CreatedAt")]
-        public DateTime CreatedAt { get; set; }
+    [Required]
+    public DateTime CreatedAt { get; set; }
+}
 
-        [InverseProperty(nameof(PostTag.Post))]
-        public ICollection<PostTag>? PostTags { get; set; }
+public class PostTag
+{
+    [Key]
+    public int PostId { get; set; }
 
-        public User? Pengguna { get; set; }
-    }
+    [Key]
+    public int TagId { get; set; }
 
-    public class User
-    {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-    }
+    [ForeignKey("PostId")]
+    public Post? Post { get; set; }
 
-    public class Data
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string address { get; set; }
-        public string phone { get; set; }
-        public string city { get; set; }
-    }
+    [ForeignKey("TagId")]
+    public Tag? Tag { get; set; }
+}
 
-    public class Tag
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
+public class Tag
+{
+    [Key]
+    public int Id { get; set; }
 
-    public class PostTag
-    {
-        public int Id { get; set; }
-        [ForeignKey("Post")]
-        [Column("id_post", Order = 1)]
-        public int IdPost { get; set; }
+    [Required]
+    public string Name { get; set; }
+}
 
-        [ForeignKey("Tags")]
-        [Column("id_tag", Order = 2)]
-        public int IdTags { get; set; }
+public class User
+{
+    [Key]
+    public int Id { get; set; }
 
-        public Post Post { get; set; } = null!;
+    [Required]
+    public string Username { get; set; }
 
-        public Tag Tag { get; set; } = null!;
-    }
-        public class LoginModel
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-    }
+    [Required]
+    public string Password { get; set; }
+}
+
+public class Login
+{
+    [Required]
+    public string Username { get; set; }
+
+    [Required]
+    public string Password { get; set; }
+}
+
+
 

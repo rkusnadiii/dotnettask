@@ -5,12 +5,10 @@
     "\\Models",
     "\\Models\\Request",
     "\\Properties",
-    "\\Repositories",
     "\\Views",
     "\\Views\\CRUD",
     "\\Views\\Home",
     "\\Views\\Shared"
   ],
-  "SelectedNode": "\\Controllers\\CRUDController.cs",
   "PreviewInSolutionExplorer": false
 }

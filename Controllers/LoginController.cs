@@ -8,6 +8,11 @@ public class LoginController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
 
+    public LoginController(ApplicationDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
         [HttpGet("/Home/Login")]
         public IActionResult Login()
         {

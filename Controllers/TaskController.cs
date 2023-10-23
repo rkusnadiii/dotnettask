@@ -1,32 +1,42 @@
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
-using examplemvc.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Text;  
-using Microsoft.IdentityModel.Tokens; 
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using examplemvc.Models;
 
 [Route("User/CRUD")]
 [ApiController]
 public class UsersController : ControllerBase
 {
+    private readonly ApplicationDbContext _context;
+
+    public UsersController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
     [HttpPost]
     [Authorize]
     public ActionResult<User> CreateUser(User user)
     {
-    if (user == null)
-        return BadRequest();
+        if (user == null)
+            return BadRequest();
 
-    Repository.AddUser(user);
-    return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
+        _context.Users.Add(user);
+        _context.SaveChanges();
+
+        return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
     }
 
     [HttpGet]
     [Authorize]
     public ActionResult<IEnumerable<User>> GetUsers()
     {
-        var users = Repository.GetUsers();
+        var users = _context.Users.ToList();
         return Ok(users);
     }
 
@@ -34,7 +44,7 @@ public class UsersController : ControllerBase
     [Authorize]
     public ActionResult<User> GetUserById(int id)
     {
-        var user = Repository.GetUserById(id);
+        var user = _context.Users.Find(id);
         if (user == null)
             return NotFound();
 
@@ -48,11 +58,15 @@ public class UsersController : ControllerBase
         if (id != user.Id)
             return BadRequest();
 
-        var existingUser = Repository.GetUserById(id);
+        var existingUser = _context.Users.Find(id);
         if (existingUser == null)
             return NotFound();
 
-        Repository.UpdateUser(user);
+        existingUser.Username = user.Username;
+        existingUser.Password = user.Password;
+
+        _context.SaveChanges();
+
         return NoContent();
     }
 
@@ -60,34 +74,42 @@ public class UsersController : ControllerBase
     [Authorize]
     public ActionResult DeleteUser(int id)
     {
-        var user = Repository.GetUserById(id);
+        var user = _context.Users.Find(id);
         if (user == null)
             return NotFound();
 
-        Repository.DeleteUser(id);
+        _context.Users.Remove(user);
+        _context.SaveChanges();
+
         return NoContent();
     }
-
-
 }
 
 [Route("Tag/CRUD")]
 [ApiController]
 public class TagsController : ControllerBase
 {
+    private readonly ApplicationDbContext _context;
+
+    public TagsController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
     [HttpPost]
     [Authorize]
     public ActionResult<Tag> CreateTag(Tag tag)
     {
-        Repository.AddTag(tag);
-        return CreatedAtAction("GetTag", new { id = tag.Id }, tag);
+        _context.Tags.Add(tag);
+        _context.SaveChanges();
+        return CreatedAtAction(nameof(GetTag), new { id = tag.Id }, tag);
     }
 
     [HttpGet]
     [Authorize]
     public ActionResult<IEnumerable<Tag>> GetTags()
     {
-        var tags = Repository.GetTags();
+        var tags = _context.Tags.ToList();
         return Ok(tags);
     }
 
@@ -95,7 +117,7 @@ public class TagsController : ControllerBase
     [Authorize]
     public ActionResult<Tag> GetTag(int id)
     {
-        var tag = Repository.GetTagById(id);
+        var tag = _context.Tags.Find(id);
         if (tag == null)
         {
             return NotFound();
@@ -112,13 +134,15 @@ public class TagsController : ControllerBase
             return BadRequest();
         }
 
-        var existingTag = Repository.GetTagById(id);
+        var existingTag = _context.Tags.Find(id);
         if (existingTag == null)
         {
             return NotFound();
         }
 
-        Repository.UpdateTag(tag);
+        existingTag.Name = tag.Name;
+
+        _context.SaveChanges();
 
         return NoContent();
     }
@@ -127,14 +151,15 @@ public class TagsController : ControllerBase
     [Authorize]
     public ActionResult<Tag> DeleteTag(int id)
     {
-        var tag = Repository.GetTagById(id);
+        var tag = _context.Tags.Find(id);
 
         if (tag == null)
         {
             return NotFound();
         }
 
-        Repository.DeleteTag(tag);
+        _context.Tags.Remove(tag);
+        _context.SaveChanges();
 
         return tag;
     }
@@ -144,19 +169,27 @@ public class TagsController : ControllerBase
 [ApiController]
 public class PostTagsController : ControllerBase
 {
+    private readonly ApplicationDbContext _context;
+
+    public PostTagsController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
     [HttpPost]
     [Authorize]
     public ActionResult<PostTag> CreatePostTag(PostTag postTag)
     {
-        Repository.AddPostTag(postTag);
-        return CreatedAtAction("GetPostTag", new { id = postTag.Id }, postTag);
+        _context.PostTags.Add(postTag);
+        _context.SaveChanges();
+        return CreatedAtAction(nameof(GetPostTag), new { id = postTag}, postTag);
     }
 
     [HttpGet]
     [Authorize]
     public ActionResult<IEnumerable<PostTag>> GetPostTags()
     {
-        var postTags = Repository.GetPostTags();
+        var postTags = _context.PostTags.ToList();
         return Ok(postTags);
     }
 
@@ -164,7 +197,7 @@ public class PostTagsController : ControllerBase
     [Authorize]
     public ActionResult<PostTag> GetPostTag(int id)
     {
-        var postTag = Repository.GetPostTagById(id);
+        var postTag = _context.PostTags.Find(id);
         if (postTag == null)
         {
             return NotFound();
@@ -176,18 +209,21 @@ public class PostTagsController : ControllerBase
     [Authorize]
     public IActionResult UpdatePostTag(int id, PostTag postTag)
     {
-        if (id != postTag.Id)
+        if (id != postTag.PostId || id !=postTag.TagId)
         {
             return BadRequest();
         }
 
-        var existingPostTag = Repository.GetPostTagById(id);
+        var existingPostTag = _context.PostTags.Find(id);
         if (existingPostTag == null)
         {
             return NotFound();
         }
 
-        Repository.UpdatePostTag(postTag);
+        existingPostTag.PostId = postTag.PostId;
+        existingPostTag.TagId = postTag.TagId;
+
+        _context.SaveChanges();
 
         return NoContent();
     }
@@ -196,14 +232,15 @@ public class PostTagsController : ControllerBase
     [Authorize]
     public ActionResult<PostTag> DeletePostTag(int id)
     {
-        var postTag = Repository.GetPostTagById(id);
+        var postTag = _context.PostTags.Find(id);
 
         if (postTag == null)
         {
             return NotFound();
         }
 
-        Repository.DeletePostTag(postTag);
+        _context.PostTags.Remove(postTag);
+        _context.SaveChanges();
 
         return postTag;
     }
@@ -213,19 +250,27 @@ public class PostTagsController : ControllerBase
 [ApiController]
 public class PostsController : ControllerBase
 {
+    private readonly ApplicationDbContext _context;
+
+    public PostsController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
     [HttpPost]
     [Authorize]
     public ActionResult<Post> CreatePost(Post post)
     {
-        Repository.AddPost(post);
-        return CreatedAtAction("GetPost", new { id = post.Id }, post);
+        _context.Posts.Add(post);
+        _context.SaveChanges();
+        return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
     }
 
     [HttpGet]
     [Authorize]
     public ActionResult<IEnumerable<Post>> GetPosts()
     {
-        var posts = Repository.GetPosts();
+        var posts = _context.Posts.ToList();
         return Ok(posts);
     }
 
@@ -233,7 +278,7 @@ public class PostsController : ControllerBase
     [Authorize]
     public ActionResult<Post> GetPost(int id)
     {
-        var post = Repository.GetPostById(id);
+        var post = _context.Posts.Find(id);
         if (post == null)
         {
             return NotFound();
@@ -250,13 +295,16 @@ public class PostsController : ControllerBase
             return BadRequest();
         }
 
-        var existingPost = Repository.GetPostById(id);
+        var existingPost = _context.Posts.Find(id);
         if (existingPost == null)
         {
             return NotFound();
         }
 
-        Repository.UpdatePost(post);
+        existingPost.Title = post.Title;
+        existingPost.Body = post.Body;
+
+        _context.SaveChanges();
 
         return NoContent();
     }
@@ -265,14 +313,15 @@ public class PostsController : ControllerBase
     [Authorize]
     public ActionResult<Post> DeletePost(int id)
     {
-        var post = Repository.GetPostById(id);
+        var post = _context.Posts.Find(id);
 
         if (post == null)
         {
             return NotFound();
         }
 
-        Repository.DeletePost(post);
+        _context.Posts.Remove(post);
+        _context.SaveChanges();
 
         return post;
     }
