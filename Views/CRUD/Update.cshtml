@@ -25,10 +25,10 @@
 
 <div class="text-center">
     <form asp-action="UpdatePost" method="post">
-        <label>Title</label><br>
-        <input type="text" name="title" class="form-control"><br>
-        <label>Body</label><br>
-        <input type="text" name="body" class="form-control"><br>
-        <button class="btn btn-default">Update</button>
+    <label>Title</label> <br>
+    <input type="text" name="title" class="form-control" value="@Model.Title"> <br>
+    <label>Body</label> <br>
+    <textarea name="body" class="form-control">@Model.Body</textarea> <br>
+    <button class="btn btn-primary">Edit</button>
     </form>
 </div>

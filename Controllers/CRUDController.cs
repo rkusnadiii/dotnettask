@@ -143,7 +143,7 @@ namespace examplemvc.Controllers
                 _dbContext.SaveChanges();
 
                 DisplaySuccessMessage("Post deleted successfully!");
-                return RedirectToAction("ReadPost");
+                return RedirectToAction("HomePost");
             }
             catch (Exception ex)
             {

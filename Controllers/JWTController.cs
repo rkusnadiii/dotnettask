@@ -26,7 +26,7 @@ public class AuthController : ControllerBase
 
     [HttpPost("login")]
     [AllowAnonymous]
-    public IActionResult Login([FromBody] Login loginModel)
+    public IActionResult Login([FromHeader] Login loginModel)
     {
         var user = AuthenticateUser(loginModel.Username, loginModel.Password);
 

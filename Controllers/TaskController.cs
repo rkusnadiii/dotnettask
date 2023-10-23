@@ -22,7 +22,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly, AuthorOnly")]
     public ActionResult<User> CreateUser(User user)
     {
         if (user == null)
@@ -99,7 +99,7 @@ public class TagsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly, AuthorOnly")]
     public ActionResult<Tags> CreateTag(Tags tag)
     {
         _context.Tags.Add(tag);
@@ -179,7 +179,7 @@ public class PostTagsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly, AuthorOnly")]
     public ActionResult<PostTag> CreatePostTag(PostTag postTag)
     {
         _context.PostTags.Add(postTag);
@@ -260,7 +260,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly, AuthorOnly")]
     public ActionResult<Post> CreatePost(Post post)
     {
         _context.Post.Add(post);
