@@ -35,7 +35,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public ActionResult<IEnumerable<User>> GetUsers()
     {
         var users = _context.Users.ToList();
@@ -43,7 +43,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public ActionResult<User> GetUserById(int id)
     {
         var user = _context.Users.Find(id);
@@ -54,7 +54,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public ActionResult UpdateUser(int id, User user)
     {
         if (id != user.Id)
@@ -73,7 +73,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public ActionResult DeleteUser(int id)
     {
         var user = _context.Users.Find(id);
@@ -108,7 +108,7 @@ public class TagsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public ActionResult<IEnumerable<Tags>> GetTags()
     {
         var tags = _context.Tags.ToList();
@@ -116,7 +116,7 @@ public class TagsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public ActionResult<Tags> GetTag(int id)
     {
         var tag = _context.Tags.Find(id);
@@ -128,7 +128,7 @@ public class TagsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public IActionResult UpdateTag(int id, Tags tag)
     {
         if (id != tag.Id)
@@ -150,7 +150,7 @@ public class TagsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public ActionResult<Tags> DeleteTag(int id)
     {
         var tag = _context.Tags.Find(id);
@@ -188,7 +188,7 @@ public class PostTagsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public ActionResult<IEnumerable<PostTag>> GetPostTags()
     {
         var postTags = _context.PostTags.ToList();
@@ -196,7 +196,7 @@ public class PostTagsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public ActionResult<PostTag> GetPostTag(int id)
     {
         var postTag = _context.PostTags.Find(id);
@@ -208,7 +208,7 @@ public class PostTagsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public IActionResult UpdatePostTag(int id, PostTag postTag)
     {
         if (id != postTag.PostId || id !=postTag.TagId)
@@ -231,7 +231,7 @@ public class PostTagsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public ActionResult<PostTag> DeletePostTag(int id)
     {
         var postTag = _context.PostTags.Find(id);
@@ -269,7 +269,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public ActionResult<IEnumerable<Post>> GetPosts()
     {
         var posts = _context.Post.ToList();
@@ -277,7 +277,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public ActionResult<Post> GetPost(int id)
     {
         var post = _context.Post.Find(id);
@@ -289,7 +289,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public IActionResult UpdatePost(int id, Post post)
     {
         if (id != post.Id)
@@ -312,7 +312,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public ActionResult<Post> DeletePost(int id)
     {
         var post = _context.Post.Find(id);
