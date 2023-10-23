@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
-namespace examplemvc.Filters
-{
+namespace examplemvc.Filters;
+
     public class CustomAuthorizeFilter : IActionFilter
     {
         public void OnActionExecuting(ActionExecutingContext context)
@@ -25,4 +25,4 @@ namespace examplemvc.Filters
         {
         }
     }
-}
+

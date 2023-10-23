@@ -6,16 +6,22 @@ namespace examplemvc.Models;
 public class Post
 {
     [Key]
+    [Column("id")]
     public int Id { get; set; }
 
-    [Required]
-    public string Title { get; set; }
-
-    [Required]
-    public string Body { get; set; }
-
-    [Required]
+    [ForeignKey("Pengguna"), Column("user_id")]
+    public int UserId { get; set; }
+    
+    public string Title { get; set; } = string.Empty;
+    public string Body { get; set; } = string.Empty;
+    
+    [Column("CreatedAt")]
     public DateTime CreatedAt { get; set; }
+
+    [InverseProperty(nameof(PostTag.Post))]
+    public ICollection<PostTag>? PostTags { get; set; }
+
+    public User? Pengguna {get; set;}
 }
 
 public class PostTag
@@ -30,10 +36,10 @@ public class PostTag
     public Post? Post { get; set; }
 
     [ForeignKey("TagId")]
-    public Tag? Tag { get; set; }
+    public Tags? Tag { get; set; }
 }
 
-public class Tag
+public class Tags
 {
     [Key]
     public int Id { get; set; }

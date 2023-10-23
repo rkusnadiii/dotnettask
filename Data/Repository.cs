@@ -4,6 +4,9 @@ using System.Linq;
 using examplemvc.Models;
 using Microsoft.EntityFrameworkCore;
 
+
+namespace examplemvc.Data;
+
 public class PostRepository : IPostRepository
 {
     private readonly ApplicationDbContext _context;
@@ -15,17 +18,17 @@ public class PostRepository : IPostRepository
 
     public async Task<IEnumerable<Post>> GetPostsAsync()
     {
-        return await _context.Posts.ToListAsync();
+        return await _context.Post.ToListAsync();
     }
 
     public async Task<Post> GetPostAsync(int id)
     {
-        return await _context.Posts.FindAsync(id);
+        return await _context.Post.FindAsync(id);
     }
 
     public void AddPost(Post post)
     {
-        _context.Posts.Add(post);
+        _context.Post.Add(post);
     }
 
     public void UpdatePost(Post post)
@@ -35,7 +38,7 @@ public class PostRepository : IPostRepository
 
     public void DeletePost(Post post)
     {
-        _context.Posts.Remove(post);
+        _context.Post.Remove(post);
     }
 }
 

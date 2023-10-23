@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using examplemvc.Models;
+using examplemvc.Data;
+
 
 [Route("User/CRUD")]
 [ApiController]
@@ -98,7 +100,7 @@ public class TagsController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public ActionResult<Tag> CreateTag(Tag tag)
+    public ActionResult<Tags> CreateTag(Tags tag)
     {
         _context.Tags.Add(tag);
         _context.SaveChanges();
@@ -107,7 +109,7 @@ public class TagsController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public ActionResult<IEnumerable<Tag>> GetTags()
+    public ActionResult<IEnumerable<Tags>> GetTags()
     {
         var tags = _context.Tags.ToList();
         return Ok(tags);
@@ -115,7 +117,7 @@ public class TagsController : ControllerBase
 
     [HttpGet("{id}")]
     [Authorize]
-    public ActionResult<Tag> GetTag(int id)
+    public ActionResult<Tags> GetTag(int id)
     {
         var tag = _context.Tags.Find(id);
         if (tag == null)
@@ -127,7 +129,7 @@ public class TagsController : ControllerBase
 
     [HttpPut("{id}")]
     [Authorize]
-    public IActionResult UpdateTag(int id, Tag tag)
+    public IActionResult UpdateTag(int id, Tags tag)
     {
         if (id != tag.Id)
         {
@@ -149,7 +151,7 @@ public class TagsController : ControllerBase
 
     [HttpDelete("{id}")]
     [Authorize]
-    public ActionResult<Tag> DeleteTag(int id)
+    public ActionResult<Tags> DeleteTag(int id)
     {
         var tag = _context.Tags.Find(id);
 
@@ -261,7 +263,7 @@ public class PostsController : ControllerBase
     [Authorize]
     public ActionResult<Post> CreatePost(Post post)
     {
-        _context.Posts.Add(post);
+        _context.Post.Add(post);
         _context.SaveChanges();
         return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
     }
@@ -270,7 +272,7 @@ public class PostsController : ControllerBase
     [Authorize]
     public ActionResult<IEnumerable<Post>> GetPosts()
     {
-        var posts = _context.Posts.ToList();
+        var posts = _context.Post.ToList();
         return Ok(posts);
     }
 
@@ -278,7 +280,7 @@ public class PostsController : ControllerBase
     [Authorize]
     public ActionResult<Post> GetPost(int id)
     {
-        var post = _context.Posts.Find(id);
+        var post = _context.Post.Find(id);
         if (post == null)
         {
             return NotFound();
@@ -295,7 +297,7 @@ public class PostsController : ControllerBase
             return BadRequest();
         }
 
-        var existingPost = _context.Posts.Find(id);
+        var existingPost = _context.Post.Find(id);
         if (existingPost == null)
         {
             return NotFound();
@@ -313,14 +315,14 @@ public class PostsController : ControllerBase
     [Authorize]
     public ActionResult<Post> DeletePost(int id)
     {
-        var post = _context.Posts.Find(id);
+        var post = _context.Post.Find(id);
 
         if (post == null)
         {
             return NotFound();
         }
 
-        _context.Posts.Remove(post);
+        _context.Post.Remove(post);
         _context.SaveChanges();
 
         return post;

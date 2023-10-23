@@ -8,6 +8,7 @@ using examplemvc.Models;
 using System;
 using System.Linq;
 using examplemvc.Filters;
+using examplemvc.Data;
 
 
 namespace examplemvc.Controllers
@@ -15,10 +16,10 @@ namespace examplemvc.Controllers
     [TypeFilter(typeof(CustomAuthorizeFilter))]
     public class PostController : Controller
     {
-        private readonly HomeController _logger;
+        private readonly ILogger<PostController> _logger;
         private readonly ApplicationDbContext _dbContext;
 
-        public PostController(HomeController  logger, ApplicationDbContext dbContext)
+        public PostController(ILogger<PostController> logger, ApplicationDbContext dbContext)
         {
             _logger = logger;
             _dbContext = dbContext;
@@ -31,59 +32,44 @@ namespace examplemvc.Controllers
         }
 
         [HttpPost("/Home/Create")]
-        public IActionResult ProcessInsert([FromForm] InsertPostRequest body)
+        public IActionResult ProcessInsert([FromForm] InsertPostRequest data)
         {
-           try
-            {
-                if (ModelState != null) 
-                {
-                    var res = ModelState
-                        .Select(s => s.Value.Errors)
-                        .Where(w => w.Count > 0)
-                        .ToList();
-                    
-                    if (ModelState.IsValid == false || body == null)
-                    {
-                        return BadRequest("Invalid request body");
-                    }
-                }
-                else
-                {
-                    return BadRequest("Invalid ModelState");
-                }
+          var res = ModelState
+            .Select(s => s.Value.Errors)
+            .Where(w => w.Count > 0)
+            .ToList();
+        
+        if (ModelState.IsValid == false)
+        {
+            return View("/Views/Errors.cshtml", res);
+        }
+        
+        var d = new Post() {
+            Title = data.Title,
+            Body = data.Body,
+            CreatedAt = DateTime.Now
+        };
 
-                var post = new Post()
-                {
-                    Title = body.Title,
-                    Body = body.Body,
-                    CreatedAt = DateTime.Now
-                };
+        _dbContext.Post.Add(d);
+        _dbContext.SaveChanges();
 
-                _dbContext.Posts.Add(post);
-                _dbContext.SaveChanges();
+        TempData.Add("msg", "Berhasil add data");
 
-                DisplaySuccessMessage("Post created successfully!");
-                return RedirectToAction("ReadPost");
-            }
-            catch (Exception ex)
-            {
-                DisplayErrorMessage($"Failed to create post: {ex.Message}");
-                return RedirectToAction("InsertForm");
-            }
+        // return Ok(new {body = request});
+        return RedirectToAction("ReadPost");
         }
 
         [HttpGet("/Home/Read")]
         public IActionResult ReadPost()
         {
-            var posts = _dbContext.Posts.ToList();
-            return View("/Views/CRUD/AllPost.cshtml");
+            var posts = _dbContext.Post.ToList();
+            return View("/Views/CRUD/AllPost.cshtml", posts);
         }
-
 
         [HttpGet("/Home/Read/{id}")]
         public IActionResult ReadPost(int id)
         {
-            var post = _dbContext.Posts.FirstOrDefault(p => p.Id == id);
+            var post = _dbContext.Post.FirstOrDefault(p => p.Id == id);
             if (post == null)
             {
                 return NotFound("Post not found");
@@ -93,23 +79,30 @@ namespace examplemvc.Controllers
         }
 
         [HttpGet("/Home/Update/{id}")]
-        public IActionResult UpdatePost()
+        public IActionResult UpdatePost(int id)
         {
-            return View("/Views/CRUD/Update.cshtml");
+            var post = _dbContext.Post.FirstOrDefault(p => p.Id == id);
+            if (post == null)
+            {
+                return NotFound("Post not found");
+            }
+
+            return View("/Views/CRUD/Update.cshtml", post);
         }
+
         [HttpPost("/Home/Update/{id}")]
-        public IActionResult UpdatePost(int id, [FromForm] InsertPostRequest body)
+        public IActionResult UpdatePost(int id, [FromForm] InsertPostRequest data)
         {
             try
             {
-                var post = _dbContext.Posts.FirstOrDefault(p => p.Id == id);
+                var post = _dbContext.Post.FirstOrDefault(p => p.Id == id);
                 if (post == null)
                 {
                     return NotFound("Post not found");
                 }
 
-                post.Title = body.Title;
-                post.Body = body.Body;
+                post.Title = data.Title;
+                post.Body = data.Body;
 
                 _dbContext.SaveChanges();
 
@@ -124,22 +117,29 @@ namespace examplemvc.Controllers
         }
 
         [HttpGet("/Home/Delete/{id}")]
-        public IActionResult DeletePost()
-        {
-            return View("/Views/CRUD/Delete.cshtml");
-        }
-        [HttpPost("/Home/Delete/{id}")]
         public IActionResult DeletePost(int id)
+        {
+            var post = _dbContext.Post.FirstOrDefault(p => p.Id == id);
+            if (post == null)
+            {
+                return NotFound("Post not found");
+            }
+
+            return View("/Views/CRUD/Delete.cshtml", post);
+        }
+
+        [HttpPost("/Home/Delete/{id}")]
+        public IActionResult DeletePostConfirmed(int id)
         {
             try
             {
-                var post = _dbContext.Posts.FirstOrDefault(p => p.Id == id);
+                var post = _dbContext.Post.FirstOrDefault(p => p.Id == id);
                 if (post == null)
                 {
                     return NotFound("Post not found");
                 }
 
-                _dbContext.Posts.Remove(post);
+                _dbContext.Post.Remove(post);
                 _dbContext.SaveChanges();
 
                 DisplaySuccessMessage("Post deleted successfully!");
@@ -161,6 +161,5 @@ namespace examplemvc.Controllers
         {
             TempData["ErrorMessage"] = message;
         }
-
     }
 }
