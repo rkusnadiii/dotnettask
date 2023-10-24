@@ -1,69 +1,66 @@
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Text;
-using System.IdentityModel.Tokens.Jwt;
-using examplemvc.Models;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using Microsoft.EntityFrameworkCore; 
-using System.Linq;
-using examplemvc.Data;
+using examplemvc.Models; 
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
-[Route("api/jwt")]
+[Route("api/[controller]")]
 [ApiController]
-public class AuthController : ControllerBase
+public class JWTController : ControllerBase
 {
+    private readonly UserManager<Login> _userManager; 
     private readonly IConfiguration _configuration;
-    private readonly ApplicationDbContext _dbContext; 
 
-    public AuthController(IConfiguration configuration, ApplicationDbContext dbContext)
+    public JWTController(UserManager<Login> userManager, IConfiguration configuration)
     {
+        _userManager = userManager;
         _configuration = configuration;
-        _dbContext = dbContext;
     }
 
-    [HttpPost("login")]
     [AllowAnonymous]
-    public IActionResult Login([FromHeader] Login loginModel)
+    [HttpPost("Login")]
+    public async Task<IActionResult> Login([FromBody] Login loginModel)
     {
-        var user = AuthenticateUser(loginModel.Username, loginModel.Password);
+        if (ModelState.IsValid)
+        {
+            var user = await _userManager.FindByNameAsync(loginModel.Username);
 
-        if (user != null)
-        {
-            var token = GenerateJwtToken(user.Username);
-            return Ok(new { Token = token });
+            if (user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password))
+            {
+                var token = GenerateJWTToken(user, loginModel.Role);
+                return Ok(new { Token = token });
+            }
         }
-        else
-        {
-            return Unauthorized();
-        }
+
+        return Unauthorized();
     }
 
-    private User AuthenticateUser(string username, string password)
+    private string GenerateJWTToken(Login user, string role)
     {
-        var user = _dbContext.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
-        return user;
-    }
-
-    private string GenerateJwtToken(string username)
-    {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+        var claims = new[]
+        {
+            // new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+            new Claim("Role", role),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
         var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
-            claims: new[]
-            {
-                new Claim("username", username)
-            },
-            expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:ExpirationInMinutes"])),
+            issuer: _configuration["JwtSettings:Issuer"],
+            audience: _configuration["JwtSettings:Audience"],
+            claims: claims,
+            expires: DateTime.Now.AddMinutes(30),
             signingCredentials: credentials
         );
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-        return tokenHandler.WriteToken(token);
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
