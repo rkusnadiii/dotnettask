@@ -14,14 +14,15 @@ using System.Threading.Tasks;
 [ApiController]
 public class JWTController : ControllerBase
 {
-    private readonly UserManager<Login> _userManager; 
+    // private readonly UserManager<Login> _userManager; 
     private readonly IConfiguration _configuration;
 
-    public JWTController(UserManager<Login> userManager, IConfiguration configuration)
+    public JWTController(IConfiguration configuration)
     {
-        _userManager = userManager;
+        // _userManager = userManager;
         _configuration = configuration;
     }
+    
 
     [AllowAnonymous]
     [HttpPost("Login")]
@@ -29,33 +30,34 @@ public class JWTController : ControllerBase
     {
         if (ModelState.IsValid)
         {
-            var user = await _userManager.FindByNameAsync(loginModel.Username);
+            // var log = await _userManager.FindByNameAsync(loginModel.Username);
 
-            if (user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password))
-            {
-                var token = GenerateJWTToken(user, loginModel.Role);
+            // if (log != null && await _userManager.CheckPasswordAsync(log, loginModel.Password))
+            // {
+            var log = loginModel.Username;
+                var token = GenerateJWTToken(log, loginModel.Role);
                 return Ok(new { Token = token });
-            }
+            //}
         }
 
         return Unauthorized();
     }
 
-    private string GenerateJWTToken(Login user, string role)
+    private string GenerateJWTToken(string user, string role)
     {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
         {
-            // new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+            new Claim(JwtRegisteredClaimNames.Sid, user),
             new Claim("Role", role),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["JwtSettings:Issuer"],
-            audience: _configuration["JwtSettings:Audience"],
+            issuer: _configuration["Jwt:Issuer"],
+            audience: _configuration["Jwt:Audience"],
             claims: claims,
             expires: DateTime.Now.AddMinutes(30),
             signingCredentials: credentials

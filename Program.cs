@@ -7,6 +7,10 @@ using examplemvc.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using examplemvc.Models;
+using Microsoft.AspNetCore.Identity;
+using Middleware.Example;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
@@ -60,6 +64,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseMiddleware<ErrorMiddleware>();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
