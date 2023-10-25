@@ -30,6 +30,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "AdminOnly")]
     public ActionResult<IEnumerable<Post>> GetPosts()
     {
         var posts = _context.Post.ToList();
