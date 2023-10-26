@@ -18,11 +18,11 @@
                 <td>@post.Body</td>
                 <td>
                     <a href="@Url.Action("ReadPost", new { id = post.Id })">View</a> |
-                    <a href="@Url.Action("UpdatePost", new { id = post.Id })">Edit</a> |
-                    <a href="@Url.Action("DeletePost", new { id = post.Id })">Delete</a>
+                    <a href="@Url.Action("Update","Home", new { id = post.Id })">Edit</a> |
+                    <a href="@Url.Action("Delete","Home", new { id = post.Id })">Delete</a>
                 </td>
             </tr>
         }
         </tbody>
     </table>
-    <a href="@Url.Action("InsertForm")" class="btn btn-primary">Create New Post</a>
+    <a href="@Url.Action("Create","Home")" class="btn btn-primary">Create New Post</a>

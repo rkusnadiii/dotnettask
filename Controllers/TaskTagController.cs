@@ -21,7 +21,7 @@ public class TagsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Policy = "AdminOnly, AuthorOnly")]
+    [Authorize(Roles = "admin, author")]
     public ActionResult<Tags> CreateTag(Tags tag)
     {
         _context.Tags.Add(tag);
@@ -30,7 +30,7 @@ public class TagsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public ActionResult<IEnumerable<Tags>> GetTags()
     {
         var tags = _context.Tags.ToList();
@@ -38,7 +38,7 @@ public class TagsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public ActionResult<Tags> GetTag(int id)
     {
         var tag = _context.Tags.Find(id);
@@ -50,7 +50,7 @@ public class TagsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public IActionResult UpdateTag(int id, Tags tag)
     {
         if (id != tag.Id)
@@ -72,7 +72,7 @@ public class TagsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public ActionResult<Tags> DeleteTag(int id)
     {
         var tag = _context.Tags.Find(id);

@@ -22,7 +22,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Policy = "AdminOnly, AuthorOnly")]
+    [Authorize(Roles = "admin, author")]
     public ActionResult<User> CreateUser(User user)
     {
         if (user == null)
@@ -35,7 +35,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public ActionResult<IEnumerable<User>> GetUsers()
     {
         var users = _context.Users.ToList();
@@ -43,7 +43,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public ActionResult<User> GetUserById(int id)
     {
         var user = _context.Users.Find(id);
@@ -54,7 +54,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public ActionResult UpdateUser(int id, User user)
     {
         if (id != user.Id)
@@ -73,7 +73,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public ActionResult DeleteUser(int id)
     {
         var user = _context.Users.Find(id);

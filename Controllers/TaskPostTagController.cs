@@ -22,7 +22,7 @@ public class PostTagsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Policy = "AdminOnly, AuthorOnly")]
+    [Authorize(Roles = "admin, author")]
     public ActionResult<PostTag> CreatePostTag(PostTag postTag)
     {
         _context.PostTags.Add(postTag);
@@ -31,7 +31,7 @@ public class PostTagsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public ActionResult<IEnumerable<PostTag>> GetPostTags()
     {
         var postTags = _context.PostTags.ToList();
@@ -39,7 +39,7 @@ public class PostTagsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public ActionResult<PostTag> GetPostTag(int id)
     {
         var postTag = _context.PostTags.Find(id);
@@ -51,7 +51,7 @@ public class PostTagsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public IActionResult UpdatePostTag(int id, PostTag postTag)
     {
         if (id != postTag.PostId || id !=postTag.TagId)
@@ -74,7 +74,7 @@ public class PostTagsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public ActionResult<PostTag> DeletePostTag(int id)
     {
         var postTag = _context.PostTags.Find(id);

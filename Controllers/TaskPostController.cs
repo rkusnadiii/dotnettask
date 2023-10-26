@@ -21,7 +21,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Policy = "AdminOnly, AuthorOnly")]
+    [Authorize(Roles = "admin, author")]
     public ActionResult<Post> CreatePost(Post post)
     {
         _context.Post.Add(post);
@@ -30,7 +30,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public ActionResult<IEnumerable<Post>> GetPosts()
     {
         var posts = _context.Post.ToList();
@@ -38,7 +38,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public ActionResult<Post> GetPost(int id)
     {
         var post = _context.Post.Find(id);
@@ -50,7 +50,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public IActionResult UpdatePost(int id, Post post)
     {
         if (id != post.Id)
@@ -73,7 +73,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "admin")]
     public ActionResult<Post> DeletePost(int id)
     {
         var post = _context.Post.Find(id);

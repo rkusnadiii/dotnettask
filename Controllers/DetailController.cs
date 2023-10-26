@@ -9,7 +9,7 @@ using System;
 using System.Linq;
 using examplemvc.Filters;
 using examplemvc.Data;
-
+using examplemvc.Controllers;
 
 namespace examplemvc.Controllers
 {

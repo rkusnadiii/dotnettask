@@ -22,11 +22,11 @@ public class JWTController : ControllerBase
         // _userManager = userManager;
         _configuration = configuration;
     }
-    
+
 
     [AllowAnonymous]
     [HttpPost("Login")]
-    public async Task<IActionResult> Login([FromBody] Login loginModel)
+    public IActionResult Login([FromBody] Login loginModel)
     {
         if (ModelState.IsValid)
         {
@@ -35,8 +35,8 @@ public class JWTController : ControllerBase
             // if (log != null && await _userManager.CheckPasswordAsync(log, loginModel.Password))
             // {
             var log = loginModel.Username;
-                var token = GenerateJWTToken(log, loginModel.Role);
-                return Ok(new { Token = token });
+            var token = GenerateJWTToken(log, loginModel.Role);
+            return Ok(new { Token = token });
             //}
         }
 

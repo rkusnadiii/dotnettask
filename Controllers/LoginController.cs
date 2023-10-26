@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using examplemvc.Models;
 using examplemvc.Data;
 
+
 namespace examplemvc.Controllers;
 
 public class LoginController : Controller
@@ -28,7 +29,7 @@ public class LoginController : Controller
             {
                 DisplaySuccessMessage("Login successful!");
                 HttpContext.Session.SetString("user", "admin");
-                return RedirectToAction("HomePost", "Post");
+                return RedirectToAction("Read", "Home");
             }
             else
             {

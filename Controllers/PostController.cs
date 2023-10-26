@@ -56,7 +56,7 @@ namespace examplemvc.Controllers
         TempData.Add("msg", "Berhasil add data");
 
         // return Ok(new {body = request});
-        return RedirectToAction("HomePost");
+        return RedirectToAction("Read","Home");
         }
 
         public void DisplaySuccessMessage(string message)
