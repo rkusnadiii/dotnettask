@@ -76,6 +76,11 @@ public class LoginController : Controller
                 return RedirectToAction("Register");
             }
         }
+        [HttpGet("Home/ErrorLogin")]
+        public IActionResult ErrorLogin()
+        {
+            return View("/Views/CRUD/ErrorLogin.cshtml");
+        }
             public void DisplaySuccessMessage(string message)
         {
             TempData["SuccessMessage"] = message;

@@ -2,7 +2,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using System.Linq;
+using examplemvc.Controllers;
 
 namespace examplemvc.Filters;
 
@@ -17,12 +21,14 @@ namespace examplemvc.Filters;
             if (context.HttpContext.Session.GetString("user") == null)
             {
                 var con = (Controller)context.Controller;
-                context.Result = con.BadRequest(new { msg = "User hasn't logged in yet" });
+                context.Result = new RedirectToActionResult("ErrorLogin", "Home", null);
+                return;
             }
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
         }
+        
     }
 

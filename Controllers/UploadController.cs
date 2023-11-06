@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using examplemvc.Filters;
+
 
 namespace examplemvc.Controllers
 {
+    [TypeFilter(typeof(CustomAuthorizeFilter))]
     public class ExcelController : Controller
     {
         [HttpGet("Upload/UploadExcel")]
