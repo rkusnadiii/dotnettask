@@ -21,12 +21,36 @@ public class PostsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "admin, author")]
+    [Authorize(Roles = "admin,author")]
     public ActionResult<Post> CreatePost(Post post)
     {
         _context.Post.Add(post);
         _context.SaveChanges();
-        return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Success (OK)";
+                break;
+            case 400:
+                _message = "(Bad Request)";
+                break;
+            case 404:
+                _message = "(Not Found)";
+                break;
+            case 201:
+                _message = "Success (OK)";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        var response = new {
+            message = _message,
+            status = statusCode,
+        };
+        return Ok(response);
     }
 
     [HttpGet]
@@ -34,7 +58,32 @@ public class PostsController : ControllerBase
     public ActionResult<IEnumerable<Post>> GetPosts()
     {
         var posts = _context.Post.ToList();
-        return Ok(posts);
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Permintaan berhasil (OK)";
+                break;
+            case 400:
+                _message = "Permintaan tidak valid (Bad Request)";
+                break;
+            case 404:
+                _message = "Data tidak ditemukan (Not Found)";
+                break;
+            case 201:
+                _message = "Pembuatan berhasil";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        var response = new {
+            message = _message,
+            status = statusCode,
+            data = posts
+        };
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
@@ -46,7 +95,32 @@ public class PostsController : ControllerBase
         {
             return NotFound();
         }
-        return Ok(post);
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Permintaan berhasil (OK)";
+                break;
+            case 400:
+                _message = "Permintaan tidak valid (Bad Request)";
+                break;
+            case 404:
+                _message = "Data tidak ditemukan (Not Found)";
+                break;
+            case 201:
+                _message = "Pembuatan berhasil";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        var response = new {
+            message = _message,
+            status = statusCode,
+            data = post
+        };
+        return Ok(response);
     }
 
     [HttpPut("{id}")]
@@ -68,8 +142,32 @@ public class PostsController : ControllerBase
         existingPost.Body = post.Body;
 
         _context.SaveChanges();
-
-        return NoContent();
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Permintaan berhasil (OK)";
+                break;
+            case 400:
+                _message = "Permintaan tidak valid (Bad Request)";
+                break;
+            case 404:
+                _message = "Data tidak ditemukan (Not Found)";
+                break;
+            case 201:
+                _message = "Pembuatan berhasil";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        var response = new {
+            message = _message,
+            status = statusCode,
+        };
+        NoContent();
+        return Ok(response);
     }
 
     [HttpDelete("{id}")]
@@ -86,6 +184,30 @@ public class PostsController : ControllerBase
         _context.Post.Remove(post);
         _context.SaveChanges();
 
-        return post;
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Permintaan berhasil (OK)";
+                break;
+            case 400:
+                _message = "Permintaan tidak valid (Bad Request)";
+                break;
+            case 404:
+                _message = "Data tidak ditemukan (Not Found)";
+                break;
+            case 201:
+                _message = "Pembuatan berhasil";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        var response = new {
+            message = _message,
+            status = statusCode,
+        };
+        return Ok(response);
     }
 }

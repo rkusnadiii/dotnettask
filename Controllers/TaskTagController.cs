@@ -21,12 +21,36 @@ public class TagsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "admin, author")]
+    [Authorize(Roles = "admin,author")]
     public ActionResult<Tags> CreateTag(Tags tag)
     {
         _context.Tags.Add(tag);
         _context.SaveChanges();
-        return CreatedAtAction(nameof(GetTag), new { id = tag.Id }, tag);
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Success (OK)";
+                break;
+            case 400:
+                _message = "(Bad Request)";
+                break;
+            case 404:
+                _message = "(Not Found)";
+                break;
+            case 201:
+                _message = "Success (OK)";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        var response = new {
+            message = _message,
+            status = statusCode,
+        };
+        return Ok(response);
     }
 
     [HttpGet]
@@ -34,7 +58,32 @@ public class TagsController : ControllerBase
     public ActionResult<IEnumerable<Tags>> GetTags()
     {
         var tags = _context.Tags.ToList();
-        return Ok(tags);
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Success (OK)";
+                break;
+            case 400:
+                _message = "(Bad Request)";
+                break;
+            case 404:
+                _message = "(Not Found)";
+                break;
+            case 201:
+                _message = "Success (OK)";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        var response = new {
+            message = _message,
+            status = statusCode,
+            data = tags
+        };
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
@@ -46,7 +95,32 @@ public class TagsController : ControllerBase
         {
             return NotFound();
         }
-        return Ok(tag);
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Success (OK)";
+                break;
+            case 400:
+                _message = "(Bad Request)";
+                break;
+            case 404:
+                _message = "(Not Found)";
+                break;
+            case 201:
+                _message = "Success (OK)";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        var response = new {
+            message = _message,
+            status = statusCode,
+            data = tag
+        };
+        return Ok(response);
     }
 
     [HttpPut("{id}")]
@@ -67,8 +141,32 @@ public class TagsController : ControllerBase
         existingTag.Name = tag.Name;
 
         _context.SaveChanges();
-
-        return NoContent();
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Success (OK)";
+                break;
+            case 400:
+                _message = "(Bad Request)";
+                break;
+            case 404:
+                _message = "(Not Found)";
+                break;
+            case 201:
+                _message = "Success (OK)";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        NoContent();
+        var response = new {
+            message = _message,
+            status = statusCode,
+        };
+        return Ok(response);
     }
 
     [HttpDelete("{id}")]
@@ -84,8 +182,31 @@ public class TagsController : ControllerBase
 
         _context.Tags.Remove(tag);
         _context.SaveChanges();
-
-        return tag;
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Success (OK)";
+                break;
+            case 400:
+                _message = "(Bad Request)";
+                break;
+            case 404:
+                _message = "(Not Found)";
+                break;
+            case 201:
+                _message = "Success (OK)";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        var response = new {
+            message = _message,
+            status = statusCode,
+        };
+        return Ok(response);
     }
 }
 

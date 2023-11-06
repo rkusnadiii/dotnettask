@@ -51,7 +51,7 @@ public class JWTController : ControllerBase
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sid, user),
-            new Claim("Role", role),
+            new Claim("role", role),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

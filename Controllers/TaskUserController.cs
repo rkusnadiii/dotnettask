@@ -22,7 +22,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "admin, author")]
+    [Authorize(Roles = "admin,author")]
     public ActionResult<User> CreateUser(User user)
     {
         if (user == null)
@@ -30,8 +30,31 @@ public class UsersController : ControllerBase
 
         _context.Users.Add(user);
         _context.SaveChanges();
-
-        return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Success (OK)";
+                break;
+            case 400:
+                _message = "(Bad Request)";
+                break;
+            case 404:
+                _message = "(Not Found)";
+                break;
+            case 201:
+                _message = "Success (OK)";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        var response = new {
+            message = _message,
+            status = statusCode,
+        };
+        return Ok(response);
     }
 
     [HttpGet]
@@ -39,7 +62,32 @@ public class UsersController : ControllerBase
     public ActionResult<IEnumerable<User>> GetUsers()
     {
         var users = _context.Users.ToList();
-        return Ok(users);
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Success (OK)";
+                break;
+            case 400:
+                _message = "(Bad Request)";
+                break;
+            case 404:
+                _message = "(Not Found)";
+                break;
+            case 201:
+                _message = "Success (OK)";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        var response = new {
+            message = _message,
+            status = statusCode,
+            data = users
+        };
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
@@ -49,8 +97,32 @@ public class UsersController : ControllerBase
         var user = _context.Users.Find(id);
         if (user == null)
             return NotFound();
-
-        return Ok(user);
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Success (OK)";
+                break;
+            case 400:
+                _message = "(Bad Request)";
+                break;
+            case 404:
+                _message = "(Not Found)";
+                break;
+            case 201:
+                _message = "Success (OK)";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        var response = new {
+            message = _message,
+            status = statusCode,
+            data = user
+        };
+        return Ok(response);
     }
 
     [HttpPut("{id}")]
@@ -68,8 +140,32 @@ public class UsersController : ControllerBase
         existingUser.Password = user.Password;
 
         _context.SaveChanges();
-
-        return NoContent();
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Success (OK)";
+                break;
+            case 400:
+                _message = "(Bad Request)";
+                break;
+            case 404:
+                _message = "(Not Found)";
+                break;
+            case 201:
+                _message = "Success (OK)";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        NoContent();
+        var response = new {
+            message = _message,
+            status = statusCode,
+        };
+        return Ok(response);
     }
 
     [HttpDelete("{id}")]
@@ -82,8 +178,31 @@ public class UsersController : ControllerBase
 
         _context.Users.Remove(user);
         _context.SaveChanges();
-
-        return NoContent();
+        string _message;
+        int statusCode = HttpContext.Response.StatusCode;
+        switch (statusCode)
+        {
+            case 200:
+                _message = "Success (OK)";
+                break;
+            case 400:
+                _message = "(Bad Request)";
+                break;
+            case 404:
+                _message = "(Not Found)";
+                break;
+            case 201:
+                _message = "Success (OK)";
+                break;
+            default:
+                _message = "Pesan default untuk status code tidak dikenal";
+                break;
+        }
+        var response = new {
+            message = _message,
+            status = statusCode,
+        };
+        return Ok(response);
     }
 }
 
