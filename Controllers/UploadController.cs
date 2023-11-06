@@ -22,6 +22,12 @@ namespace examplemvc.Controllers
             {
                 try
                 {
+                    var fileExtension = Path.GetExtension(excelFile.FileName);
+                    if (fileExtension != ".xlsx")
+                    {
+                        return RedirectToAction("UploadError", "Excel");
+                    }
+
                     var uploads = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
                     if (!Directory.Exists(uploads))
                     {
@@ -34,21 +40,26 @@ namespace examplemvc.Controllers
                         await excelFile.CopyToAsync(fileStream);
                     }
 
-
                     return RedirectToAction("UploadSuccess", "Excel");
                 }
                 catch (Exception ex)
                 {
-                    return RedirectToAction("Error", "Home");
+                    return RedirectToAction("UploadError", "Excel");
                 }
             }
 
             return RedirectToAction("UploadForm", "Excel");
         }
 
+
         public IActionResult UploadSuccess()
         {
             return View("/Views/Upload/UploadSuccess.cshtml");
+        }
+
+        public IActionResult UploadError()
+        {
+            return View("/Views/Upload/Error.cshtml");
         }
     }
 }

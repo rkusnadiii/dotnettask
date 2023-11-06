@@ -55,7 +55,6 @@ namespace examplemvc.Controllers
 
         TempData.Add("msg", "Berhasil add data");
 
-        // return Ok(new {body = request});
         return RedirectToAction("Read","Home");
         }
 

@@ -65,13 +65,13 @@ public class LoginController : Controller
                 _dbContext.Users.Add(newUser);
                 _dbContext.SaveChanges();
 
-                DisplaySuccessMessage("Registration successful!");
+                DisplaySuccessMessage("Registration Success!");
 
                 return RedirectToAction("Login");
             }
             catch (Exception ex)
             {
-                DisplayErrorMessage($"Registration failed: {ex.Message}");
+                DisplayErrorMessage($"Registration Failed: {ex.Message}");
 
                 return RedirectToAction("Register");
             }
