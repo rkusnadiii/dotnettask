@@ -25,7 +25,7 @@ public class LoginController : Controller
         public IActionResult Login(string username, string password)
         {
            var user = _dbContext.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
-            if (user != 0)
+            if (user != null)
             {
                 DisplaySuccessMessage("Login successful!");
                 HttpContext.Session.SetString("user", "admin");
