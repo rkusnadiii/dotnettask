@@ -54,12 +54,12 @@ namespace examplemvc.Controllers
                 _dbContext.SaveChanges();
 
                 DisplaySuccessMessage("Post updated successfully!");
-                return RedirectToAction("ReadPost", new { id = post.Id });
+                return RedirectToAction("Read", "Home", new { id = post.Id });
             }
             catch (Exception ex)
             {
                 DisplayErrorMessage($"Failed to update post: {ex.Message}");
-                return RedirectToAction("UpdatePost", new { id });
+                return RedirectToAction("Update","Home", new { id });
             }
         }
         public void DisplaySuccessMessage(string message)

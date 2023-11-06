@@ -52,12 +52,12 @@ namespace examplemvc.Controllers
                 _dbContext.SaveChanges();
 
                 DisplaySuccessMessage("Post deleted successfully!");
-                return RedirectToAction("HomePost");
+                return RedirectToAction("Read", "Home");
             }
             catch (Exception ex)
             {
                 DisplayErrorMessage($"Failed to delete post: {ex.Message}");
-                return RedirectToAction("DeletePost", new { id });
+                return RedirectToAction("Delete","Home", new { id });
             }
         }
 
